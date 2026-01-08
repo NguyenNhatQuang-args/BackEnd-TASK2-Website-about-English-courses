@@ -3,44 +3,7 @@
 ## Mô tả
 Backend API được xây dựng với TypeScript, Express.js, PostgreSQL (TypeORM) và JWT authentication.
 
-## Cấu trúc thư mục
-
-```
-src/
-├── config/          # Cấu hình ứng dụng
-├── constants/       # Các hằng số dùng chung
-├── controllers/     # Xử lý request/response
-├── dtos/            # Data Transfer Objects
-├── entities/        # TypeORM entities
-├── middlewares/     # Middleware (auth, error, validation)
-├── routes/          # Định nghĩa routes
-├── services/        # Business logic
-├── seeds/           # Dữ liệu mặc định
-├── types/           # TypeScript types/interfaces
-├── utils/           # Các hàm tiện ích
-├── app.ts           # Express app configuration
-└── index.ts         # Entry point
-```
-
-## Cài đặt
-
-### 1. Cài đặt PostgreSQL
-Đảm bảo PostgreSQL đã được cài đặt và đang chạy.
-
-### 2. Tạo database
-```sql
-CREATE DATABASE task2_db;
-```
-
-### 3. Cài đặt dependencies
-```bash
-npm install
-```
-
-### 4. Cấu hình môi trường
-Tạo file `.env` từ `.env.example` và cập nhật thông tin database.
-
-### 5. Chạy ứng dụng
+### Chạy ứng dụng
 ```bash
 # Development mode
 npm run dev
@@ -50,37 +13,6 @@ npm run build
 
 # Production mode
 npm start
-```
-
-## Environment Variables
-
-Tạo file `.env` từ `.env.example`:
-
-```env
-NODE_ENV=development
-PORT=5000
-
-# PostgreSQL
-DB_HOST=localhost
-DB_PORT=5432
-DB_USERNAME=postgres
-DB_PASSWORD=your_password
-DB_DATABASE=task2_db
-
-# JWT
-JWT_SECRET=your_secret_key
-JWT_EXPIRES_IN=7d
-JWT_REFRESH_SECRET=your_refresh_secret
-JWT_REFRESH_EXPIRES_IN=30d
-
-# Bcrypt
-BCRYPT_SALT_ROUNDS=12
-
-# API
-API_PREFIX=/api/v1
-
-# CORS (React Vite)
-CORS_ORIGIN=http://localhost:5173
 ```
 
 ## API Endpoints
@@ -127,31 +59,8 @@ CORS_ORIGIN=http://localhost:5173
 
 ## Tài khoản Admin mặc định
 - **Username:** admin
-- **Password:** 
+- **Password:** admin@123
 
-## Request Examples
-
-### Register
-```json
-POST /api/v1/auth/register
-{
-  "username": "johndoe",
-  "fullname": "John Doe",
-  "phone": "0987654321",
-  "email": "john@example.com",
-  "dateOfBirth": "1995-06-15",
-  "password": "Password123"
-}
-```
-
-### Login
-```json
-POST /api/v1/auth/login
-{
-  "username": "johndoe",
-  "password": "Password123"
-}
-```
 
 ### Create Role (Admin)
 ```json
@@ -170,38 +79,5 @@ PUT /api/v1/users/:id/role
 Authorization: Bearer <access_token>
 {
   "role": "teacher"
-}
-```
-
-## Response Format
-
-### Success Response
-```json
-{
-  "success": true,
-  "message": "Thành công",
-  "data": { ... },
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "total": 100,
-    "totalPages": 10,
-    "hasNext": true,
-    "hasPrev": false
-  }
-}
-```
-
-### Error Response
-```json
-{
-  "success": false,
-  "message": "Lỗi...",
-  "errors": [
-    {
-      "field": "email",
-      "message": "Email không hợp lệ"
-    }
-  ]
 }
 ```
