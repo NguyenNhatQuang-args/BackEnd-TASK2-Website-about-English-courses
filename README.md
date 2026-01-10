@@ -1,7 +1,7 @@
 # Backend API
 
 ## Mô tả
-Backend API được xây dựng với TypeScript, Express.js, PostgreSQL (TypeORM) và JWT authentication.
+Backend API được xây dựng với TypeScript, Nestjs, PostgreSQL (TypeORM) và JWT authentication.
 
 ### Chạy ứng dụng
 ```bash

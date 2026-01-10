@@ -1,45 +1,48 @@
-/*
-import createApp from './app';
-import { config } from './config';
-import { connectDatabase } from './config/database';
-import { seedDefaultData } from './seeds/seed';
-*/
-import { config } from './config';
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { config } from './config';
 
 // Start server
 const startServer = async (): Promise<void> => {
   try {
-
     const app = await NestFactory.create(AppModule);
-    app.enableCors();
+
+    // Enable CORS
+    app.enableCors({
+      origin: config.cors.origin,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+    });
+
+    // Global prefix
     app.setGlobalPrefix('api/v1');
 
-    /*
-    // Connect to database
-    await connectDatabase();
-
-    
-    // Seed default data
-    await seedDefaultData();
-
-    
-    // Create Express app
-    const app = createApp();
-    */
+    // Global validation pipe
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+      }),
+    );
 
     // Start listening
-    app.listen(config.port, () => {
-      console.log(`
+    await app.listen(config.port);
+    
+    console.log(`
 ========================================
-  Server is running!
+  NestJS Server is running!
   Environment: ${config.nodeEnv}
   Port: ${config.port}
-  API: http://localhost:${config.port}${config.api.prefix}
+  API: http://localhost:${config.port}/api/v1
 ========================================
-      `);
-    });
+    `);
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
