@@ -1,6 +1,6 @@
 import { Exercise, VocabQuestion, GrammarQuestion, PracticeQuestion, VideoGrammarQuestion, ListeningQuestion, WritingQuestion, ReadingQuestion, SpeakingQuestion, Dang1_WordBank } from "../types/exercise.type";
 
-// Minimal seed data with ONE example per section
+
 export const exercisesData: Exercise[] = [
   {
     id: "exercise_lesson_1",

@@ -1,4 +1,4 @@
-import { Exercise, ExerciseSection, ExerciseType, Question } from "../types/exercise.type";
+import { Exercise, ExerciseSection, ExerciseType, Question } from "./types/exercise.type";
 
 export class ExerciseEntity implements Exercise {
   id: string;

@@ -1,8 +1,7 @@
 import { 
   Exercise, 
   ExerciseSection, 
-  Question,
-  Dang1_WordBank,
+  Question,  QuestionUnion,  Dang1_WordBank,
   VocabQuestion,
   GrammarQuestion,
   PracticeQuestion,
@@ -11,7 +10,7 @@ import {
   WritingQuestion,
   ReadingQuestion,
   SpeakingQuestion
-} from "../types/exercise.type";
+} from "../../types/exercise.type";
 
 // Base DTOs
 export class CreateExerciseDTO {
@@ -48,7 +47,7 @@ export class CreateExerciseSectionDTO {
   sectionType: string;
   title: string;
   description: string;
-  questions?: Question[];
+  questions?: QuestionUnion[];
   order: number;
 
   constructor(data: Partial<CreateExerciseSectionDTO>) {
@@ -107,28 +106,16 @@ export class CreateGrammarQuestionDTO {
   }
 }
 
-// Word Bank (Dạng I) Question DTO
-// Frontend Logic:
-// - Answer Area (Top): Initially empty. Words are placed here by clicking them from Word Bank
-// - Word Bank (Bottom): Contains all available words, including distractors
-// 
-// Interaction Flow:
-// 1. User clicks word in Word Bank → word moves to Answer Area, appended in order
-// 2. User clicks word in Answer Area → word is removed and returns to Word Bank
-// 3. User can make unlimited corrections before submitting
-// 4. Submit checks if Answer Area matches the correct answer
 export class CreateWordBankQuestionDTO {
   questionText: string;
   
-  // All available words for the Word Bank area (bottom)
-  // Some may be distractors not needed for the answer
+
   workBanks: { id: string | number; name: string }[];
   
-  // The correct final answer (what appears in Answer Area when correct)
+
   answer: string;
   
-  // IDs of words from workBanks that form the correct answer (in order)
-  // Used for validation and to identify distractors
+  
   correctWordIds: (string | number)[];
   
   explanation?: string;
@@ -146,7 +133,7 @@ export class CreateWordBankQuestionDTO {
   }
 }
 
-// Practice Question DTO
+
 export class CreatePracticeQuestionDTO {
   questionText: string;
   subType: "multiple_choice" | "fill_blank" | "match" | "arrange";
@@ -167,7 +154,7 @@ export class CreatePracticeQuestionDTO {
   }
 }
 
-// Video Grammar Question DTO
+
 export class CreateVideoGrammarQuestionDTO {
   videoUrl: string;
   videoTitle: string;
@@ -301,16 +288,11 @@ export class ExerciseResponseDTO {
   }
 }
 
-// ============================================
-// WORD BANK INTERACTION DTOs
-// ============================================
-
-// Request: User clicks a word in Word Bank (bottom area)
 export class SelectWordFromBankDTO {
   questionId: string;
   userId: string;
   wordId: string | number;
-  currentSelectedWordIds: (string | number)[]; // Current words in Answer Area
+  currentSelectedWordIds: (string | number)[]; 
 
   constructor(data: Partial<SelectWordFromBankDTO>) {
     this.questionId = data.questionId || "";
@@ -320,12 +302,12 @@ export class SelectWordFromBankDTO {
   }
 }
 
-// Request: User clicks a word in Answer Area (top) to remove it
+
 export class RemoveWordFromAnswerDTO {
   questionId: string;
   userId: string;
   wordId: string | number;
-  currentSelectedWordIds: (string | number)[]; // Current words in Answer Area
+  currentSelectedWordIds: (string | number)[]; 
 
   constructor(data: Partial<RemoveWordFromAnswerDTO>) {
     this.questionId = data.questionId || "";
@@ -335,21 +317,18 @@ export class RemoveWordFromAnswerDTO {
   }
 }
 
-// Response: After selecting/removing a word
 export class WordBankInteractionResponseDTO {
   success: boolean;
   message: string;
   
-  // Current state of Answer Area (top) - words in order
+
   answerArea: { id: string | number; name: string }[];
   
-  // Current state of Word Bank (bottom) - remaining available words
+  
   wordBank: { id: string | number; name: string }[];
   
-  // Whether current answer is correct
   isCorrect: boolean;
   
-  // Number of interactions so far
   attemptCount: number;
 
   constructor(data: Partial<WordBankInteractionResponseDTO>) {
