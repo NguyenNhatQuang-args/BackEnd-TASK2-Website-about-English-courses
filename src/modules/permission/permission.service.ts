@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Permission } from '../../entities/permission.entity';
 import { CreatePermissionDto, UpdatePermissionDto, PermissionQueryDto } from './dto';
+import { UserRole } from '../../constants';
 
 @Injectable()
 export class PermissionService {
@@ -17,30 +18,20 @@ export class PermissionService {
 
   // Create permission
   async create(createPermissionDto: CreatePermissionDto) {
-    // Check name exists
-    const existingPermission = await this.permissionRepository.findOne({
-      where: { name: createPermissionDto.name },
+    // Check code exists
+    const existingCode = await this.permissionRepository.findOne({
+      where: { code: createPermissionDto.code },
     });
 
-    if (existingPermission) {
-      throw new ConflictException('Permission đã tồn tại');
-    }
-
-    // Check action:resource combination exists
-    const existingActionResource = await this.permissionRepository.findOne({
-      where: {
-        action: createPermissionDto.action,
-        resource: createPermissionDto.resource,
-      },
-    });
-
-    if (existingActionResource) {
-      throw new ConflictException('Quyền với action và resource này đã tồn tại');
+    if (existingCode) {
+      throw new ConflictException('Mã quyền đã tồn tại');
     }
 
     const permission = this.permissionRepository.create({
-      ...createPermissionDto,
+      code: createPermissionDto.code,
+      name: createPermissionDto.name,
       description: createPermissionDto.description || '',
+      roles: createPermissionDto.roles || [],
     });
 
     await this.permissionRepository.save(permission);
@@ -65,21 +56,13 @@ export class PermissionService {
   async findAll(query?: PermissionQueryDto) {
     const where: Record<string, any> = {};
 
-    if (query?.action) {
-      where.action = query.action;
-    }
-
-    if (query?.resource) {
-      where.resource = query.resource;
-    }
-
     if (typeof query?.isActive === 'boolean') {
       where.isActive = query.isActive;
     }
 
     const permissions = await this.permissionRepository.find({
       where,
-      order: { resource: 'ASC', action: 'ASC' },
+      order: { code: 'ASC' },
     });
 
     return {
@@ -95,30 +78,16 @@ export class PermissionService {
     });
 
     if (!permission) {
-      throw new NotFoundException('Không tìm thấy permission');
+      throw new NotFoundException('Không tìm thấy quyền');
     }
 
-    // Check name uniqueness
-    if (updatePermissionDto.name && updatePermissionDto.name !== permission.name) {
-      const existingPermission = await this.permissionRepository.findOne({
-        where: { name: updatePermissionDto.name },
+    // Check code uniqueness
+    if (updatePermissionDto.code && updatePermissionDto.code !== permission.code) {
+      const existingCode = await this.permissionRepository.findOne({
+        where: { code: updatePermissionDto.code },
       });
-      if (existingPermission) {
-        throw new ConflictException('Permission đã tồn tại');
-      }
-    }
-
-    // Check action:resource combination uniqueness
-    if (updatePermissionDto.action || updatePermissionDto.resource) {
-      const action = updatePermissionDto.action || permission.action;
-      const resource = updatePermissionDto.resource || permission.resource;
-
-      const existingActionResource = await this.permissionRepository.findOne({
-        where: { action, resource },
-      });
-
-      if (existingActionResource && existingActionResource.id !== permissionId) {
-        throw new ConflictException('Quyền với action và resource này đã tồn tại');
+      if (existingCode) {
+        throw new ConflictException('Mã quyền đã tồn tại');
       }
     }
 
@@ -135,12 +104,12 @@ export class PermissionService {
     });
 
     if (!permission) {
-      throw new NotFoundException('Không tìm thấy permission');
+      throw new NotFoundException('Không tìm thấy quyền');
     }
 
     await this.permissionRepository.remove(permission);
 
-    return { message: 'Xóa permission thành công' };
+    return { message: 'Xóa quyền thành công' };
   }
 
   // Toggle active status
@@ -150,7 +119,7 @@ export class PermissionService {
     });
 
     if (!permission) {
-      throw new NotFoundException('Không tìm thấy permission');
+      throw new NotFoundException('Không tìm thấy quyền');
     }
 
     permission.isActive = !permission.isActive;
@@ -159,24 +128,19 @@ export class PermissionService {
     return this.toPermissionResponse(permission);
   }
 
-  // Get actions
-  getActions() {
-    return ['create', 'read', 'update', 'delete', 'manage'];
-  }
-
-  // Get resources
-  getResources() {
-    return ['users', 'roles', 'permissions', 'courses', 'lessons', 'profile'];
+  // Get available roles
+  getRoles() {
+    return Object.values(UserRole);
   }
 
   // Transform to response
   private toPermissionResponse(permission: Permission) {
     return {
       id: permission.id,
+      code: permission.code,
       name: permission.name,
-      action: permission.action,
-      resource: permission.resource,
       description: permission.description,
+      roles: permission.roles,
       isActive: permission.isActive,
       createdAt: permission.createdAt.toISOString(),
       updatedAt: permission.updatedAt.toISOString(),

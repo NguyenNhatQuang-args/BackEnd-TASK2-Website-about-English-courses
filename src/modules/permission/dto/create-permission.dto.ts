@@ -1,25 +1,33 @@
 import {
   IsString,
   IsNotEmpty,
-  IsEnum,
   IsOptional,
   MaxLength,
+  IsArray,
+  IsEnum,
+  Matches,
 } from 'class-validator';
-import { PermissionAction, PermissionResource } from '../../../constants';
+import { UserRole } from '../../../constants';
 
 export class CreatePermissionDto {
   @IsString()
-  @IsNotEmpty({ message: 'Tên permission không được để trống' })
-  @MaxLength(100, { message: 'Tên permission không được quá 100 ký tự' })
+  @IsNotEmpty({ message: 'Mã quyền không được để trống' })
+  @MaxLength(50, { message: 'Mã quyền không được quá 50 ký tự' })
+  @Matches(/^[A-Z_]+$/, {
+    message: 'Mã quyền chỉ được chứa chữ hoa và dấu gạch dưới',
+  })
+  code: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Tên quyền không được để trống' })
+  @MaxLength(100, { message: 'Tên quyền không được quá 100 ký tự' })
   name: string;
-
-  @IsEnum(PermissionAction, { message: 'Action không hợp lệ' })
-  action: PermissionAction;
-
-  @IsEnum(PermissionResource, { message: 'Resource không hợp lệ' })
-  resource: PermissionResource;
 
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsArray({ message: 'Roles phải là một mảng' })
+  @IsEnum(UserRole, { each: true, message: 'Role không hợp lệ (admin, user, teacher)' })
+  roles: UserRole[];
 }

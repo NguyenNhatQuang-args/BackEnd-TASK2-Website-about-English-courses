@@ -29,29 +29,19 @@ export class PermissionController {
     const result = await this.permissionService.findAll(query);
     return {
       success: true,
-      message: 'Lấy danh sách permission thành công',
+      message: 'Lấy danh sách quyền thành công',
       data: result.permissions,
       total: result.total,
     };
   }
 
-  // GET /api/v1/permissions/actions
-  @Get('actions')
-  getActions() {
+  // GET /api/v1/permissions/roles
+  @Get('roles')
+  getRoles() {
     return {
       success: true,
-      message: 'Lấy danh sách actions thành công',
-      data: this.permissionService.getActions(),
-    };
-  }
-
-  // GET /api/v1/permissions/resources
-  @Get('resources')
-  getResources() {
-    return {
-      success: true,
-      message: 'Lấy danh sách resources thành công',
-      data: this.permissionService.getResources(),
+      message: 'Lấy danh sách roles thành công',
+      data: this.permissionService.getRoles(),
     };
   }
 
@@ -61,7 +51,7 @@ export class PermissionController {
     const permission = await this.permissionService.findById(id);
     return {
       success: true,
-      message: 'Lấy thông tin permission thành công',
+      message: 'Lấy thông tin quyền thành công',
       data: permission,
     };
   }
@@ -72,7 +62,7 @@ export class PermissionController {
     const permission = await this.permissionService.create(createPermissionDto);
     return {
       success: true,
-      message: 'Tạo permission thành công',
+      message: 'Tạo quyền thành công',
       data: permission,
     };
   }
@@ -86,7 +76,7 @@ export class PermissionController {
     const permission = await this.permissionService.update(id, updatePermissionDto);
     return {
       success: true,
-      message: 'Cập nhật permission thành công',
+      message: 'Cập nhật quyền thành công',
       data: permission,
     };
   }
@@ -97,7 +87,7 @@ export class PermissionController {
     await this.permissionService.remove(id);
     return {
       success: true,
-      message: 'Xóa permission thành công',
+      message: 'Xóa quyền thành công',
     };
   }
 

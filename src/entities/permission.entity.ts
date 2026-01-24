@@ -5,30 +5,24 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { PermissionAction, PermissionResource } from '../constants';
+import { UserRole } from '../constants';
 
 @Entity('permissions')
 export class Permission {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
+  code!: string;
+
+  @Column({ type: 'varchar', length: 100 })
   name!: string;
-
-  @Column({
-    type: 'enum',
-    enum: PermissionAction,
-  })
-  action!: PermissionAction;
-
-  @Column({
-    type: 'enum',
-    enum: PermissionResource,
-  })
-  resource!: PermissionResource;
 
   @Column({ type: 'text', default: '' })
   description!: string;
+
+  @Column({ type: 'simple-array', default: '' })
+  roles!: UserRole[];
 
   @Column({ type: 'boolean', name: 'is_active', default: true })
   isActive!: boolean;
