@@ -29,7 +29,7 @@ export class UserController {
 
   // GET /api/v1/users
   @Get()
-  @Roles('admin')
+  @Roles('ADMIN')
   async findAll(@Query() query: UserQueryDto) {
     const result = await this.userService.findAll(query);
     return {
@@ -42,7 +42,7 @@ export class UserController {
 
   // GET /api/v1/users/:id
   @Get(':id')
-  @Roles('admin')
+  @Roles('ADMIN')
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const user = await this.userService.findById(id);
     return {
@@ -54,7 +54,7 @@ export class UserController {
 
   // POST /api/v1/users
   @Post()
-  @Roles('admin')
+  @Roles('ADMIN')
   async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.userService.create(createUserDto);
     return {
@@ -66,7 +66,7 @@ export class UserController {
 
   // PUT /api/v1/users/:id
   @Put(':id')
-  @Roles('admin')
+  @Roles('ADMIN')
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -81,7 +81,7 @@ export class UserController {
 
   // DELETE /api/v1/users/:id
   @Delete(':id')
-  @Roles('admin')
+  @Roles('ADMIN')
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.userService.remove(id);
     return {
@@ -92,7 +92,7 @@ export class UserController {
 
   // PUT /api/v1/users/:id/role
   @Put(':id/role')
-  @Roles('admin')
+  @Roles('ADMIN')
   async assignRole(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() assignRoleDto: AssignRoleDto,
@@ -107,7 +107,7 @@ export class UserController {
 
   // PUT /api/v1/users/:id/permissions
   @Put(':id/permissions')
-  @Roles('admin')
+  @Roles('ADMIN')
   async assignPermissions(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() assignPermissionsDto: AssignPermissionsDto,

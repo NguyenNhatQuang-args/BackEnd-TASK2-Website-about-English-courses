@@ -1,37 +1,30 @@
-// Permission Actions - Các hành động quyền
-export enum PermissionAction {
-  CREATE = 'create',
-  READ = 'read',
-  UPDATE = 'update',
-  DELETE = 'delete',
-  MANAGE = 'manage', // Full access
-}
+// Re-export from entities for backward compatibility
+export { PermissionAction, PermissionResource } from '../entities/enums';
 
-// Permission Resources - Các tài nguyên được quản lý
-export enum PermissionResource {
-  USERS = 'users',
-  ROLES = 'roles',
-  PERMISSIONS = 'permissions',
-  COURSES = 'courses',
-  LESSONS = 'lessons',
-  PROFILE = 'profile',
-}
+import { PermissionAction, PermissionResource, UserRole } from '../entities/enums';
 
 // Mảng các action và resource
 export const PERMISSION_ACTIONS: string[] = Object.values(PermissionAction);
 export const PERMISSION_RESOURCES: string[] = Object.values(PermissionResource);
 
-// Default permissions cho mỗi role
-export const DEFAULT_ROLE_PERMISSIONS: Record<string, string[]> = {
-  admin: [
+// Default permissions cho mỗi role (comma-separated strings for DB)
+export const DEFAULT_ROLE_PERMISSIONS: Record<UserRole, string> = {
+  [UserRole.ADMIN]: 'manage:users,manage:roles,manage:permissions,manage:courses,manage:lessons,manage:classes',
+  [UserRole.TEACHER]: 'read:users,create:courses,read:courses,update:courses,create:lessons,read:lessons,update:lessons,delete:lessons,create:classes,read:classes,update:classes,update:profile',
+  [UserRole.STUDENT]: 'read:courses,read:lessons,read:classes,read:profile,update:profile',
+};
+
+// Default permissions as arrays (for seed and validation)
+export const DEFAULT_ROLE_PERMISSIONS_ARRAY: Record<UserRole, string[]> = {
+  [UserRole.ADMIN]: [
     'manage:users',
     'manage:roles',
     'manage:permissions',
     'manage:courses',
     'manage:lessons',
-    'manage:profile',
+    'manage:classes',
   ],
-  teacher: [
+  [UserRole.TEACHER]: [
     'read:users',
     'create:courses',
     'read:courses',
@@ -40,11 +33,15 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<string, string[]> = {
     'read:lessons',
     'update:lessons',
     'delete:lessons',
-    'manage:profile',
+    'create:classes',
+    'read:classes',
+    'update:classes',
+    'update:profile',
   ],
-  user: [
+  [UserRole.STUDENT]: [
     'read:courses',
     'read:lessons',
+    'read:classes',
     'read:profile',
     'update:profile',
   ],

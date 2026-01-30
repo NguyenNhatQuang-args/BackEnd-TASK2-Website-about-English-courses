@@ -1,24 +1,51 @@
-import { IsString, IsNotEmpty, IsEnum, IsArray, IsInt } from 'class-validator';
-import { CourseLevel, CourseKind }  from './enums';
+import { IsString, IsNotEmpty, IsEnum, IsArray, IsOptional, IsUUID, IsNumber } from 'class-validator';
+import { CourseLevel, CourseKind, Status } from '../../entities/enums';
 
 export class CreateClassDto {
     @IsString()
     @IsNotEmpty()
-    className: string;
+    name: string;
 
     @IsString()
-    @IsNotEmpty()
-    classCode: string;
+    @IsOptional()
+    classCode?: string;
+
+    @IsString()
+    @IsOptional()
+    description?: string;
+
+    @IsUUID()
+    @IsOptional()
+    courseId?: string;
+
+    @IsUUID()
+    @IsOptional()
+    teacherId?: string;
 
     @IsEnum(CourseLevel)
-    @IsNotEmpty()
-    level: CourseLevel;
+    @IsOptional()
+    level?: CourseLevel;
 
     @IsEnum(CourseKind)
-    @IsNotEmpty()
-    kindOfCourse: CourseKind;
+    @IsOptional()
+    kind?: CourseKind;
+
+    @IsNumber()
+    @IsOptional()
+    maxStudents?: number;
+
+    @IsOptional()
+    startDate?: Date;
+
+    @IsOptional()
+    endDate?: Date;
+
+    @IsEnum(Status)
+    @IsOptional()
+    status?: Status;
 
     @IsArray()
-    @IsInt({ each: true })
-    studentIds: number[];
+    @IsString({ each: true })
+    @IsOptional()
+    studentIds?: string[];
 }

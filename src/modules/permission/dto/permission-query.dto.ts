@@ -1,15 +1,11 @@
-import { IsOptional, IsString, IsEnum, IsBoolean } from 'class-validator';
+import { IsOptional, IsBoolean, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { PermissionAction, PermissionResource } from '../../../constants';
+import { UserRole } from '../../../constants';
 
 export class PermissionQueryDto {
   @IsOptional()
-  @IsEnum(PermissionAction, { message: 'Action không hợp lệ' })
-  action?: PermissionAction;
-
-  @IsOptional()
-  @IsEnum(PermissionResource, { message: 'Resource không hợp lệ' })
-  resource?: PermissionResource;
+  @IsEnum(UserRole, { message: 'Role không hợp lệ' })
+  role?: UserRole;
 
   @IsOptional()
   @Transform(({ value }) => {

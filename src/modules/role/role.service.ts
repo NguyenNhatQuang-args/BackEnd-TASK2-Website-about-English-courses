@@ -28,7 +28,7 @@ export class RoleService {
     const role = this.roleRepository.create({
       ...createRoleDto,
       name: createRoleDto.name.toLowerCase(),
-      permissions: createRoleDto.permissions || [],
+      permissions: createRoleDto.permissions ? createRoleDto.permissions.join(',') : '',
     });
 
     await this.roleRepository.save(role);
@@ -135,7 +135,7 @@ export class RoleService {
       throw new NotFoundException('Không tìm thấy vai trò');
     }
 
-    role.permissions = permissions;
+    role.permissions = permissions.join(',');
     await this.roleRepository.save(role);
 
     return this.toRoleResponse(role);
@@ -163,7 +163,7 @@ export class RoleService {
       id: role.id,
       name: role.name,
       description: role.description,
-      permissions: role.permissions || [],
+      permissions: role.permissions ? role.permissions.split(',') : [],
       isActive: role.isActive,
       createdAt: role.createdAt.toISOString(),
       updatedAt: role.updatedAt.toISOString(),

@@ -14,7 +14,9 @@
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:generate": "npm run typeorm -- migration:generate -d src/config/database.ts",
     "migration:run": "npm run typeorm -- migration:run -d src/config/database.ts",
-    "migration:revert": "npm run typeorm -- migration:revert -d src/config/database.ts"
+    "migration:revert": "npm run typeorm -- migration:revert -d src/config/database.ts",
+    "seed": "ts-node src/run-seed.ts",
+    "seed:common": "ts-node src/seeds/seed-common-lists.ts"
   },
   "keywords": [
     "nestjs",
@@ -27,9 +29,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nestjs/common": "^11.1.11",
+    "@nestjs/common": "^11.1.12",
     "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^11.1.11",
+    "@nestjs/core": "^11.1.12",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.0",
     "@nestjs/platform-express": "^11.1.11",
@@ -37,15 +39,17 @@
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "pg": "^8.16.3",
+    "react": "^19.2.4",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
     "typeorm": "^0.3.28",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "vite": "^7.3.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

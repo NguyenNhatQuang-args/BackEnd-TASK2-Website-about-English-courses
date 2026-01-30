@@ -35,8 +35,8 @@ export class UserService {
       throw new ConflictException('Email đã được sử dụng');
     }
 
-    const role = createUserDto.role || UserRole.USER;
-    const defaultPermissions = DEFAULT_ROLE_PERMISSIONS[role] || [];
+    const role = createUserDto.role || UserRole.STUDENT;
+    const defaultPermissions = DEFAULT_ROLE_PERMISSIONS[role] || '';
 
     const user = this.userRepository.create({
       ...createUserDto,
@@ -184,7 +184,7 @@ export class UserService {
     }
 
     user.role = role;
-    user.permissions = DEFAULT_ROLE_PERMISSIONS[role] || [];
+    user.permissions = DEFAULT_ROLE_PERMISSIONS[role] || '';
 
     await this.userRepository.save(user);
 
@@ -201,7 +201,7 @@ export class UserService {
       throw new NotFoundException('Không tìm thấy người dùng');
     }
 
-    user.permissions = permissions;
+    user.permissions = permissions.join(',');
     await this.userRepository.save(user);
 
     return this.toUserResponse(user);
@@ -247,8 +247,8 @@ export class UserService {
           ? user.dateOfBirth.toISOString().split('T')[0]
           : user.dateOfBirth,
       role: user.role,
-      permissions: user.permissions || [],
-      isActive: user.isActive,
+      permissions: user.permissions ? user.permissions.split(',') : [],
+      status: user.status,
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     };
